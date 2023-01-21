@@ -1,14 +1,9 @@
 package com.algaworks.algalog.api.controller;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algalog.domain.model.Cliente;
 import com.algaworks.algalog.domain.repository.ClienteRepository;
+import com.algaworks.algalog.domain.service.CatalogoClienteService;
 
 import lombok.AllArgsConstructor;
 
@@ -32,6 +28,7 @@ import lombok.AllArgsConstructor;
 public class ClienteController {	
 	//@Autowired
 	private ClienteRepository clienteRepository;
+	private CatalogoClienteService catalagoClienteService;
 	
 	@GetMapping
 	public List<Cliente> listar() {
@@ -56,7 +53,7 @@ public class ClienteController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
-		return clienteRepository.save(cliente);
+		return catalagoClienteService.salvar(cliente);
 	}
 	
 	
@@ -67,7 +64,7 @@ public class ClienteController {
 		}
 		
 		cliente.setId(clienteId);
-		cliente = clienteRepository.save(cliente);
+		cliente = catalagoClienteService.salvar(cliente);
 		
 		return ResponseEntity.ok(cliente);
 	}
@@ -78,7 +75,7 @@ public class ClienteController {
 			return ResponseEntity.notFound().build();
 		}
 		
-		clienteRepository.deleteById(clienteId);
+		catalagoClienteService.excluir(clienteId);
 		
 		return ResponseEntity.noContent().build();
 	}
